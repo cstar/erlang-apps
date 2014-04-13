@@ -23,8 +23,8 @@
 #
 
 define :install_standard_erlang_dependencies, :name => nil, :deploy_config => nil do
-  include_recipe "erlang::erl_call"
-  # include_recipe "erlang::epmd"
+  include_recipe "erlang_apps::erl_call"
+  # include_recipe "erlang_apps::epmd"
 
 end
 
@@ -53,7 +53,7 @@ define :install_erlang_release, :name => nil, :deploy_config => nil do
       "Authorization" => "token #{github_authorization_token}" 
     })
     mode 0644
-    not_if "/usr/bin/test -d #{deploy_config["install"]["path"]}/releases"
+    not_if "/usr/bin/test -d #{deploy_config["install"]["path"]}/releases/#{deploy_config["version"]}"
   end
   
   bash "install #{deploy_config["id"]}" do
@@ -63,7 +63,7 @@ define :install_erlang_release, :name => nil, :deploy_config => nil do
     (tar zxf /tmp/#{filename} -C #{deploy_config["install"]["path"]} --strip-components 1)
     (rm -f /tmp/#{filename})
     EOH
-    not_if "/usr/bin/test -d #{deploy_config["install"]["path"]}/releases"
+    not_if "/usr/bin/test -d #{deploy_config["install"]["path"]}/releases/#{deploy_config["version"]}"
   end
   
   # bash "use system ERTS" do
